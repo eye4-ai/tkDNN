@@ -1,0 +1,35 @@
+FROM nvcr.io/nvidia/l4t-base:r32.3.1 as eye4-base-trt-builder
+LABEL maintainer "agruet[at]eye4[dot]ai"
+
+WORKDIR /tmp
+
+RUN echo "deb [ trusted=yes ] https://europe-west2-apt.pkg.dev/projects/eye4-cloud e4-apt main" >> /etc/apt/sources.list.d/eye4.list \
+    && echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections \
+    && apt update \ 
+    && apt install -qy gnupg2 \
+    wget \
+    libyaml-cpp-dev \
+    tensorrt \
+    opencv-libs \
+    libeigen3-dev \
+    opencv-dev \
+    opencv-scripts \
+    libssl-dev \
+    cmake \
+    cuda-command-line-tools-10-0 \
+    build-essential \
+    && mkdir /u00
+
+FROM eye4-base-trt-builder as eye4-base-tkdnn-builder
+WORKDIR /u00
+
+ADD . /u00
+RUN mkdir _build \
+    && cd _build \
+    && cmake -DCPACK_GENERATOR=DEB \
+    -DCPACK_PACKAGE_NAME="tkdnn" \
+    -DCPACK_SYSTEM_NAME="ubuntu18.04-cuda10.0-cudnn7-tensorrt6-opencv4.4.0_arm64" \
+    -DCPACK_DEBIAN_PACKAGE_MAINTAINER="Alexis Gruet agruet@eye4.ai" \ 
+    -DCPACK_PACKAGE_VERSION="0.5" \ 
+    -DCPACK_DEBIAN_PACKAGE_ARCHITECTURE="arm64" .. \
+    && make -j$(nproc) package
