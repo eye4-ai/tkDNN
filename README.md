@@ -8,6 +8,13 @@
 ```
 docker build -f docker/Dockerfile.arm64 -t e4-tkdnn .
 ```
+This will produce a .deb archive (to refactor using from scratch) and -o for output the .deb on the host. As for now, to get the outcome of this dockerbuild run : 
+```
+docker run -ti docker.io/library/e4-tkdnn bash
+docker cp 73a87ca595db:/u00/_build/tkdnn-0.5.1-ubuntu18.04-cuda10.0-cudnn7-tensorrt6-opencv4.4.0_arm64.deb .
+gsutil cp tkdnn-0.5.1-ubuntu18.04-cuda10.0-cudnn7-tensorrt6-opencv4.4.0_arm64.deb gs://eye4-cloud.appspot.com/deb/
+gcloud alpha artifacts packages import e4-apt --location=europe-west2 --project eye4-cloud --gcs-source=gs://eye4-cloud.appspot.com/deb/tkdnn-0.5.1-ubuntu18.04-cuda10.0-cudnn7-tensorrt6-opencv4.4.0_arm64.deb
+```
 
 # tkDNN
 tkDNN is a Deep Neural Network library built with cuDNN and tensorRT primitives, specifically thought to work on NVIDIA Jetson Boards. It has been tested on TK1(branch cudnn2), TX1, TX2, AGX Xavier, Nano and several discrete GPUs.
