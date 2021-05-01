@@ -1,3 +1,14 @@
+# tkDNN for eye4!
+
+- We forked only for referencing version and sync'ing with upstream when this is required (update new version) 
+- Instruction to declare the remote https://www.geeksforgeeks.org/sync-your-fork-with-master-in-github/
+- We just updated the base CmakeFile with CPAck for debianization of packages and created a multistage dockerfile for building. 
+- To build just run on the root folder this command :
+
+```
+docker build -f docker/Dockerfile.arm64 -t e4-tkdnn .
+```
+
 # tkDNN
 tkDNN is a Deep Neural Network library built with cuDNN and tensorRT primitives, specifically thought to work on NVIDIA Jetson Boards. It has been tested on TK1(branch cudnn2), TX1, TX2, AGX Xavier, Nano and several discrete GPUs.
 The main goal of this project is to exploit NVIDIA boards as much as possible to obtain the best inference performance. It does not allow training. 
